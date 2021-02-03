@@ -7,17 +7,125 @@ using namespace std;
 
 Inventory _inventory;
 
+void DisplayMainMenu()
+{
+    cout << "Choose and option:" << endl;
+    cout << "1 - Add book" << endl;
+    cout << "2 - List All books" << endl;
+    cout << "3 - Check out book" << endl;
+    cout << "4 - Check in book" << endl;
+    cout << "5 - Remove book from library" << endl;
+    cout << "6 - List all checked out books" << endl;
+
+    cout << "0 - Exit" << endl;
+}
+
+void AddNewBook() 
+{
+    cout << "Title: ";
+    string title;
+    getline(cin, title);
+
+    cout << "Author: ";
+    string author;
+    getline(cin, author);
+
+    int id = _inventory.GetNextBookId();
+
+    Book newBook(id, title, author);
+
+
+
+    _inventory.AddBook(newBook);
+}
+
+void ListBooks()
+{
+    cout << "Id\tTitle\tAuthor\n\n";
+    for (int i = 0; i < _inventory.NumberOfBooks(); i++)
+    {
+        cout << _inventory.GetBookByIndex(i)->Id << "\t" << _inventory.GetBookByIndex(i)->Title << "\t" << _inventory.GetBookByIndex(i)->Author << endl;
+    }
+}
+
+void CheckInOrOutBook(bool checkIn)
+{
+    string inOrOuT;
+
+    if (checkIn)
+    {
+        inOrOuT = "in";
+    }
+    else
+    {
+        inOrOuT = "out";
+    }
+
+    cout << "Enter a book title to check " + inOrOuT + ": ";
+    string title;
+    getline(cin, title);
+
+    int foundBookIndex = _inventory.FindBookByTitle(title);
+
+    if (foundBookIndex >= 0)
+    {
+        Book* foundBook = _inventory.GetBookByIndex(foundBookIndex);
+
+        //if checkedOut == false -> Book checked in
+        //if checkedOut == True -> Book checked out
+
+        if (!foundBook->CheckedOut == checkIn)
+        {
+            cout << "Book already checked " + inOrOuT << endl;;
+            return;
+        }
+
+        if (checkIn) 
+        {
+            _inventory.CheckInBook(foundBook);
+        }
+        else
+        {
+            _inventory.CheckOutBook(foundBook);
+        }
+        
+        cout << "Book checked " + inOrOuT + "!" << endl;
+    }
+    else
+    {
+        cout << "Book not found" << endl;
+    }
+
+    return;
+}
+
+void RemoveBook()
+{
+    cout << "Title: ";
+    string title;
+    getline(cin, title);
+
+    _inventory.RemoveBook(title);
+}
+
+void DisplayCheckedOutBooks()
+{
+    cout << "\nId\tTitle\tAuthor" << endl;
+    for (int i = 0; i < _inventory.NumberOfBooks(); i++)
+    {
+        if (_inventory.GetBookByIndex(i)->CheckedOut)
+        {
+            cout << _inventory.GetBookByIndex(i)->Id << "\t" << _inventory.GetBookByIndex(i)->Title << "\t" << _inventory.GetBookByIndex(i)->Author << endl;
+        }
+    }
+}
+
+
 int main()
 {
     while (true)
     {
-        cout << "Choose and option:" << endl;
-        cout << "1 - Add book" << endl;
-        cout << "2 - List All books" << endl;
-        cout << "3 - Check out book" << endl;
-        cout << "4 - Check in book" << endl;
-
-        cout << "0 - Exit" << endl;
+        DisplayMainMenu();
 
         int input;
 
@@ -27,81 +135,42 @@ int main()
         {
         case 0:
 
+            cout << "Thank you. Good bye!" << endl;
             return 0;
 
         case 1:
         {
-            cout << "Title: ";
-            string title;
-            getline(cin, title);
-
-            cout << "Author: ";
-            string author;
-            getline(cin, author);
-
-            int id = _inventory.Books.size() + 1;
-
-            Book newBook(id, title, author);
-
-
-
-            _inventory.AddBook(newBook);
+            AddNewBook();
             break;
         }
 
         case 2:
-
-            cout << "Id\tTitle\tAuthor\n\n";
-            for (int i = 0; i < _inventory.Books.size(); i++) 
-            {
-                cout << _inventory.Books[i].Id << "\t" << _inventory.Books[i].Title << "\t" << _inventory.Books[i].Author << endl; 
-            }
+        {
+            ListBooks();
             break;
+        }
 
         case 3:
         {
-            cout << "Enter a book title to check out: ";
-            string title;
-            getline(cin, title);
-            Book foundBook;
-            if (_inventory.FindBookByTitle(title, foundBook)) 
-            {
-                if (!foundBook.CheckedOut)
-                {
-                    cout << "Book already checked out!" << endl;;
-                    break;
-                }
-                _inventory.CheckOutBook(foundBook);
-                cout << "Book checked out!" << endl;
-            }
-            else 
-            {
-                cout << "Book not found" << endl;
-            }
-
+            CheckInOrOutBook(false);
             break;
         }
+
         case 4:
         {
-            cout << "Enter a book title to check in: ";
-            string title;
-            getline(cin, title);
-            Book foundBook;
-            if (_inventory.FindBookByTitle(title, foundBook))
-            {
-                if (!foundBook.CheckedOut)
-                {
-                    cout << "Book already checked in!";
-                    break;
-                }
-                _inventory.CheckInBook(foundBook);
-                cout << "Book checked in!" << endl;
-            }
-            else
-            {
-                cout << "Book not found";
-            }
+            CheckInOrOutBook(true);
+            break;
+        }
 
+        case 5:
+        {
+            RemoveBook();
+            break;
+        }
+
+        case 6:
+        {
+            DisplayCheckedOutBooks();
             break;
         }
 
@@ -109,7 +178,7 @@ int main()
             cout << "Invalid selection. Try again." << endl;
             break;
         }
-
+        
 
     }
 

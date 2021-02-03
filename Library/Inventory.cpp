@@ -1,29 +1,63 @@
 #include "Inventory.h"
 #include <vector>
 
+Inventory::Inventory()
+{
+	Inventory::MaxBookId = 0;
+}
+
+int Inventory::GetNextBookId()
+{
+	Inventory::MaxBookId++;
+	return Inventory::MaxBookId;
+}
+
+int Inventory::NumberOfBooks()
+{
+	return Inventory::Books.size();
+}
+
+Book* Inventory::GetBookByIndex(int index)
+{
+	return &Inventory::Books[index];
+}
+
 void Inventory::AddBook(Book book)
 {
 	Inventory::Books.push_back(book);
 }
 
-bool Inventory::FindBookByTitle(std::string title, Book &book)
+void Inventory::RemoveBook(std::string title)
 {
 	std::vector<Book>::iterator it = std::find(Inventory::Books.begin(), Inventory::Books.end(), Book(0, title, ""));
 	if (it != Inventory::Books.end())
 	{
-		book = *it;
-		return true;
+		Inventory::Books.erase(it);
 	}
 
-	return false;
+
+
 }
 
-void Inventory::CheckOutBook(Book &book)
+int Inventory::FindBookByTitle(std::string title)
 {
-	book.CheckedOut = true;
+	std::vector<Book>::iterator it = std::find(Inventory::Books.begin(), Inventory::Books.end(), Book(0, title, ""));
+	if (it == Inventory::Books.end())
+	{
+		return -1;
+	}
+
+	int index = it - Inventory::Books.begin();
+
+	return index;
 }
 
-void Inventory::CheckInBook(Book& book)
+void Inventory::CheckOutBook(Book* book)
 {
-	book.CheckedOut = false;
+	book->CheckedOut = true;
+}
+
+void Inventory::CheckInBook(Book* book)
+{
+	book->CheckedOut = false;
 }
