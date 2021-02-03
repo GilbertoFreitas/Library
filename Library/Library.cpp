@@ -22,7 +22,7 @@ int main()
         int input;
 
         cin >> input;
-
+        cin.ignore();
         switch (input)
         {
         case 0:
@@ -51,15 +51,59 @@ int main()
 
         case 2:
 
+            cout << "Id\tTitle\tAuthor\n\n";
+            for (int i = 0; i < _inventory.Books.size(); i++) 
+            {
+                cout << _inventory.Books[i].Id << "\t" << _inventory.Books[i].Title << "\t" << _inventory.Books[i].Author << endl; 
+            }
             break;
 
         case 3:
+        {
+            cout << "Enter a book title to check out: ";
+            string title;
+            getline(cin, title);
+            Book foundBook;
+            if (_inventory.FindBookByTitle(title, foundBook)) 
+            {
+                if (!foundBook.CheckedOut)
+                {
+                    cout << "Book already checked out!" << endl;;
+                    break;
+                }
+                _inventory.CheckOutBook(foundBook);
+                cout << "Book checked out!" << endl;
+            }
+            else 
+            {
+                cout << "Book not found" << endl;
+            }
 
             break;
-
+        }
         case 4:
+        {
+            cout << "Enter a book title to check in: ";
+            string title;
+            getline(cin, title);
+            Book foundBook;
+            if (_inventory.FindBookByTitle(title, foundBook))
+            {
+                if (!foundBook.CheckedOut)
+                {
+                    cout << "Book already checked in!";
+                    break;
+                }
+                _inventory.CheckInBook(foundBook);
+                cout << "Book checked in!" << endl;
+            }
+            else
+            {
+                cout << "Book not found";
+            }
 
             break;
+        }
 
         default:
             cout << "Invalid selection. Try again." << endl;
