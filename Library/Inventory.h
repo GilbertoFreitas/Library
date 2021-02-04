@@ -8,14 +8,13 @@ class Inventory
 private:
 
 	std::vector<Book> Books;
+	int MaxBookId;
 
 public:
 
-	int MaxBookId;
 
 	Inventory();
 
-	int GetNextBookId();
 	int NumberOfBooks();
 	Book* GetBookByIndex(int index);
 	void AddBook(Book book);

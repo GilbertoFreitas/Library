@@ -30,9 +30,7 @@ void AddNewBook()
     string author;
     getline(cin, author);
 
-    int id = _inventory.GetNextBookId();
-
-    Book newBook(id, title, author);
+    Book newBook(title, author);
 
 
 
@@ -48,17 +46,17 @@ void ListBooks()
     }
 }
 
-void CheckInOrOutBook(bool checkIn)
+void CheckInOrOutBook(bool checkOut)
 {
     string inOrOuT;
 
-    if (checkIn)
+    if (checkOut)
     {
-        inOrOuT = "in";
+        inOrOuT = "out";
     }
     else
     {
-        inOrOuT = "out";
+        inOrOuT = "in";
     }
 
     cout << "Enter a book title to check " + inOrOuT + ": ";
@@ -74,13 +72,13 @@ void CheckInOrOutBook(bool checkIn)
         //if checkedOut == false -> Book checked in
         //if checkedOut == True -> Book checked out
 
-        if (!foundBook->CheckedOut == checkIn)
+        if (foundBook->CheckedOut == checkOut)
         {
             cout << "Book already checked " + inOrOuT << endl;;
             return;
         }
 
-        if (checkIn) 
+        if (checkOut) 
         {
             _inventory.CheckInBook(foundBook);
         }
