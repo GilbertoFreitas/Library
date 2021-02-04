@@ -39,11 +39,7 @@ void AddNewBook()
 
 void ListBooks()
 {
-    cout << "Id\tTitle\tAuthor\n\n";
-    for (int i = 0; i < _inventory.NumberOfBooks(); i++)
-    {
-        cout << _inventory.GetBookByIndex(i)->Id << "\t" << _inventory.GetBookByIndex(i)->Title << "\t" << _inventory.GetBookByIndex(i)->Author << endl;
-    }
+    _inventory.DisplayAllBooks();
 }
 
 void CheckInOrOutBook(bool checkOut)
@@ -63,38 +59,21 @@ void CheckInOrOutBook(bool checkOut)
     string title;
     getline(cin, title);
 
-    int foundBookIndex = _inventory.FindBookByTitle(title);
+    int result = _inventory.CheckInOrOutBook(title, checkOut);
 
-    if (foundBookIndex >= 0)
+    if (result == CheckInOrOutResult::BookNotFound)
     {
-        Book* foundBook = _inventory.GetBookByIndex(foundBookIndex);
+        cout << "Book not found!\n";
 
-        //if checkedOut == false -> Book checked in
-        //if checkedOut == True -> Book checked out
-
-        if (foundBook->CheckedOut == checkOut)
-        {
-            cout << "Book already checked " + inOrOuT << endl;;
-            return;
-        }
-
-        if (checkOut) 
-        {
-            _inventory.CheckInBook(foundBook);
-        }
-        else
-        {
-            _inventory.CheckOutBook(foundBook);
-        }
-        
+    }
+    else if(result == CheckInOrOutResult::Sucess)
+    {
         cout << "Book checked " + inOrOuT + "!" << endl;
     }
     else
     {
-        cout << "Book not found" << endl;
+        cout << "Book failed checking" + inOrOuT + "!" << endl;
     }
-
-    return;
 }
 
 void RemoveBook()
@@ -108,14 +87,7 @@ void RemoveBook()
 
 void DisplayCheckedOutBooks()
 {
-    cout << "\nId\tTitle\tAuthor" << endl;
-    for (int i = 0; i < _inventory.NumberOfBooks(); i++)
-    {
-        if (_inventory.GetBookByIndex(i)->CheckedOut)
-        {
-            cout << _inventory.GetBookByIndex(i)->Id << "\t" << _inventory.GetBookByIndex(i)->Title << "\t" << _inventory.GetBookByIndex(i)->Author << endl;
-        }
-    }
+    _inventory.DisplayCheckOutBooks();
 }
 
 
@@ -150,13 +122,13 @@ int main()
 
         case 3:
         {
-            CheckInOrOutBook(false);
+            CheckInOrOutBook(true);
             break;
         }
 
         case 4:
         {
-            CheckInOrOutBook(true);
+            CheckInOrOutBook(false);
             break;
         }
 

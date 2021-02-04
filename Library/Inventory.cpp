@@ -7,21 +7,43 @@ Inventory::Inventory()
 }
 
 
+void Inventory::DisplayAllBooks()
+{
+	std::cout << "Id\tTitle\tAuthor" << std::endl;;
+	for (int i = 0; i < NumberOfBooks(); i++)
+	{
+		Books[i].DisplayBook();
+	}
+	std::cout << std::endl;
+}
+
+void Inventory::DisplayCheckOutBooks()
+{
+	std::cout << "\nId\tTitle\tAuthor" << std::endl;
+	for (int i = 0; i < NumberOfBooks(); i++)
+	{
+		if (GetBookByIndex(i).IsCheckedOut())
+		{
+			Books[i].DisplayBook();
+		}
+	}
+}
+
 int Inventory::NumberOfBooks()
 {
 	return Inventory::Books.size();
 }
 
-Book* Inventory::GetBookByIndex(int index)
+Book Inventory::GetBookByIndex(int index)
 {
-	return &Inventory::Books[index];
+	return Inventory::Books[index];
 }
 
 void Inventory::AddBook(Book book)
 {
 	Inventory::MaxBookId++;
 
-	book.Id = MaxBookId;
+	book.SetBookId(MaxBookId);
 
 	Inventory::Books.push_back(book);
 }
@@ -53,12 +75,19 @@ int Inventory::FindBookByTitle(std::string title)
 	return index;
 }
 
-void Inventory::CheckOutBook(Book* book)
+CheckInOrOutResult Inventory::CheckInOrOutBook(std::string title, bool checkOut)
 {
-	book->CheckedOut = true;
+	int foundBookIndex = FindBookByTitle(title);
+
+	if (foundBookIndex < 0)
+	{
+		return CheckInOrOutResult::BookNotFound;
+	}
+	
+
+	Books[foundBookIndex].CheckInOrOut(checkOut);
+
+	return CheckInOrOutResult::Sucess;
+
 }
 
-void Inventory::CheckInBook(Book* book)
-{
-	book->CheckedOut = false;
-}

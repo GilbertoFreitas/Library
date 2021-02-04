@@ -15,6 +15,12 @@ public:
 	Book();
 	Book(std::string title, std::string author);
 
+	void SetBookId(int id);
+	void CheckInOrOut(bool checkOut);
+	void DisplayBook();
+	bool IsCheckedOut();
+
+
 	bool operator==(const Book& book) const
 	{
 		if (Title.compare(book.Title) == 0) 
