@@ -59,16 +59,20 @@ void CheckInOrOutBook(bool checkOut)
     string title;
     getline(cin, title);
 
-    int result = _inventory.CheckInOrOutBook(title, checkOut);
+    CheckInOrOutResult result = _inventory.CheckInOrOutBook(title, checkOut);
 
     if (result == CheckInOrOutResult::BookNotFound)
     {
         cout << "Book not found!\n";
 
     }
-    else if(result == CheckInOrOutResult::Sucess)
+    else if(result == CheckInOrOutResult::Success)
     {
         cout << "Book checked " + inOrOuT + "!" << endl;
+    }
+    else if (result == CheckInOrOutResult::AlreadyCheckedIn || result == CheckInOrOutResult::AlreadyCheckedOut)
+    {
+        cout << "Book already checked " + inOrOuT + "!" << endl;
     }
     else
     {

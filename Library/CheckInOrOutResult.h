@@ -1,7 +1,9 @@
 #pragma once
 enum class CheckInOrOutResult
 {
-	Sucess,
+	Success,
 	BookNotFound,
+	AlreadyCheckedOut,
+	AlreadyCheckedIn,
 	Failure
 };
