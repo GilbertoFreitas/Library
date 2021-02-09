@@ -4,39 +4,41 @@
 #include <string>
 
 
-void Inventory::DisplayAllBooks()
+void Inventory::DisplayAllBooks() 
 {
 	std::cout << "Id\tTitle\tAuthor" << std::endl;;
-	for (int i = 0; i < NumberOfBooks(); i++)
+	for (int i = 0; i < NumberOfBooks(); i++) 
 	{
 		Books[i].DisplayBook();
 	}
 	std::cout << std::endl;
 }
 
-void Inventory::DisplayCheckOutBooks()
+void Inventory::DisplayCheckOutBooks() 
 {
 	std::cout << "\nId\tTitle\tAuthor" << std::endl;
-	for (int i = 0; i < NumberOfBooks(); i++)
+	for (int i = 0; i < NumberOfBooks(); i++) 
 	{
-		if (GetBookByIndex(i).IsCheckedOut())
+		if (GetBookByIndex(i).IsCheckedOut()) 
 		{
 			Books[i].DisplayBook();
 		}
 	}
 }
 
-int Inventory::NumberOfBooks()
+int Inventory::NumberOfBooks() 
 {
+
 	return Inventory::Books.size();
 }
 
-Book Inventory::GetBookByIndex(int index)
+Book Inventory::GetBookByIndex(int index) 
 {
+
 	return Inventory::Books[index];
 }
 
-void Inventory::LoadBooks()
+void Inventory::LoadBooks() 
 {
 	std::ifstream inFile("books.txt");
 
@@ -48,7 +50,8 @@ void Inventory::LoadBooks()
 	//bookData[3] = checked out
 
 	std::string bookLine;
-	while (std::getline(inFile, bookLine)) {
+	while (std::getline(inFile, bookLine)) 
+	{
 
 		size_t nextIndex = bookLine.find('|');
 		bookData[0] = bookLine.substr(0, nextIndex);
@@ -78,10 +81,11 @@ void Inventory::LoadBooks()
 
 }
 
-void Inventory::AddBook(Book book)
+void Inventory::AddBook(Book book) 
 {
 	int nextBookId = 0;
-	if (Books.size() > 0) {
+	if (Books.size() > 0) 
+	{
 		nextBookId = Books.back().Id + 1;
 	}
 
@@ -94,24 +98,21 @@ void Inventory::AddBook(Book book)
 	oFile.close();
 }
 
-void Inventory::RemoveBook(std::string title)
+void Inventory::RemoveBook(std::string title) 
 {
 	
-
 	std::vector<Book>::iterator it = std::find(Inventory::Books.begin(), Inventory::Books.end(), Book(title, ""));
-	if (it != Inventory::Books.end())
+	if (it != Inventory::Books.end()) 
 	{
 		Inventory::Books.erase(it);
 	}
 
-
-
 }
 
-int Inventory::FindBookByTitle(std::string title)
+int Inventory::FindBookByTitle(std::string title) 
 {
 	std::vector<Book>::iterator it = std::find(Inventory::Books.begin(), Inventory::Books.end(), Book(title, ""));
-	if (it == Inventory::Books.end())
+	if (it == Inventory::Books.end()) 
 	{
 		return -1;
 	}
@@ -121,21 +122,22 @@ int Inventory::FindBookByTitle(std::string title)
 	return index;
 }
 
-CheckInOrOutResult Inventory::CheckInOrOutBook(std::string title, bool checkOut)
+CheckInOrOutResult Inventory::CheckInOrOutBook(std::string title, bool checkOut) 
 {
+
 	int foundBookIndex = FindBookByTitle(title);
 
-	if (foundBookIndex < 0)
+	if (foundBookIndex < 0) 
 	{
 		return CheckInOrOutResult::BookNotFound;
 	}
-	else if (checkOut == Books[foundBookIndex].IsCheckedOut())
+	else if (checkOut == Books[foundBookIndex].IsCheckedOut()) 
 	{
-		if (checkOut)
+		if (checkOut) 
 		{
 			return CheckInOrOutResult::AlreadyCheckedOut;
 		}
-		else
+		else 
 		{
 			return CheckInOrOutResult::AlreadyCheckedIn;
 		}

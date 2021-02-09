@@ -11,23 +11,28 @@ Inventory _inventory;
 vector<User> _users;
 User _loggedInUser;
 
-Role GetRoleByVal(int roleVal) {
+Role GetRoleByVal(int roleVal) 
+{
     Role outRole;
 
-    if (roleVal == 0) {
+    if (roleVal == 0) 
+    {
         outRole = Role::Admin;
     }
-    else if (roleVal == 1) {
+    else if (roleVal == 1) 
+    {
         outRole = Role::Employee;
     }
-    else {
+    else 
+    {
         outRole = Role::Member;
     }
 
     return outRole;
 }
 
-void LoadUsers() {
+void LoadUsers() 
+{
     ifstream inFile("users.txt");
 
     string lineData[2];
@@ -35,7 +40,8 @@ void LoadUsers() {
     //lineData[1] = role int val;
 
     string userLine;
-    while (getline(inFile, userLine)) {
+    while (getline(inFile, userLine)) 
+    {
 
         size_t index = userLine.find("|");
         lineData[0] = userLine.substr(0, index);
@@ -50,22 +56,27 @@ void LoadUsers() {
     }
 }
 
-int GetRoleVal(Role role) {
+int GetRoleVal(Role role) 
+{
     int roleVal = -1;
-    if (role == Role::Admin) {
+    if (role == Role::Admin) 
+    {
         roleVal = 0;
     }
-    else if (role == Role::Employee) {
+    else if (role == Role::Employee) 
+    {
         roleVal = 1;
     }
-    else if (role == Role::Member) {
+    else if (role == Role::Member) 
+    {
         roleVal = 2;
     }
 
     return roleVal;
 }
 
-void CreateAccount() {
+void CreateAccount() 
+{
 
     User newUser;
     /*cout << "First Name:";
@@ -92,13 +103,16 @@ void CreateAccount() {
     cin >> roleOption;
     cin.ignore();
 
-    if (roleOption == 1) {
+    if (roleOption == 1) 
+    {
         newUser.Role = Role::Admin;
     }
-    else if (roleOption == 2) {
+    else if (roleOption == 2) 
+    {
         newUser.Role = Role::Employee;
     }
-    else {
+    else 
+    {
         newUser.Role = Role::Member;
     }
 
@@ -119,12 +133,12 @@ void Login() {
     cin >> option;
     cin.ignore();
 
-    if (option == 2)
+    if (option == 2) 
     {
         CreateAccount();
     }
 
-    while (true)
+    while (true) 
     {
         cout << "Enter username: ";
         string username;
@@ -135,7 +149,8 @@ void Login() {
 
         vector<User>::iterator it = find(_users.begin(), _users.end(), user);
 
-        if (it != _users.end()) {
+        if (it != _users.end()) 
+        {
             _loggedInUser = _users[it - _users.begin()];
             break;
         }
@@ -144,7 +159,8 @@ void Login() {
     
 }
 
-void DisplayMainMenu() {
+void DisplayMainMenu() 
+{
     cout << endl;
     cout << "Choose and option:" << endl;
     if (_loggedInUser.Role == Role::Employee || _loggedInUser.Role == Role::Admin)
@@ -161,7 +177,8 @@ void DisplayMainMenu() {
     cout << "0 - Exit" << endl;
 }
 
-void AddNewBook() {
+void AddNewBook() 
+{
     cout << "Title: ";
     string title;
     getline(cin, title);
@@ -177,18 +194,20 @@ void AddNewBook() {
     _inventory.AddBook(newBook);
 }
 
-void ListBooks() {
+void ListBooks() 
+{
     _inventory.DisplayAllBooks();
 }
 
-void CheckInOrOutBook(bool checkOut) {
+void CheckInOrOutBook(bool checkOut) 
+{
     string inOrOuT;
 
-    if (checkOut)
+    if (checkOut) 
     {
         inOrOuT = "out";
     }
-    else
+    else 
     {
         inOrOuT = "in";
     }
@@ -199,26 +218,27 @@ void CheckInOrOutBook(bool checkOut) {
 
     CheckInOrOutResult result = _inventory.CheckInOrOutBook(title, checkOut);
 
-    if (result == CheckInOrOutResult::BookNotFound)
+    if (result == CheckInOrOutResult::BookNotFound) 
     {
         cout << "Book not found!\n";
 
     }
-    else if(result == CheckInOrOutResult::Success)
+    else if(result == CheckInOrOutResult::Success) 
     {
         cout << "Book checked " + inOrOuT + "!" << endl;
     }
-    else if (result == CheckInOrOutResult::AlreadyCheckedIn || result == CheckInOrOutResult::AlreadyCheckedOut)
+    else if (result == CheckInOrOutResult::AlreadyCheckedIn || result == CheckInOrOutResult::AlreadyCheckedOut) 
     {
         cout << "Book already checked " + inOrOuT + "!" << endl;
     }
-    else
+    else 
     {
         cout << "Book failed checking" + inOrOuT + "!" << endl;
     }
 }
 
-void RemoveBook() {
+void RemoveBook() 
+{
     cout << "Title: ";
     string title;
     getline(cin, title);
@@ -226,18 +246,20 @@ void RemoveBook() {
     _inventory.RemoveBook(title);
 }
 
-void DisplayCheckedOutBooks() {
+void DisplayCheckedOutBooks() 
+{
     _inventory.DisplayCheckOutBooks();
 }
 
 
-int main() {
+int main() 
+{
 
     LoadUsers();
     Login();
 
     _inventory.LoadBooks();
-        while (true)
+        while (true) 
         {
             DisplayMainMenu();
 

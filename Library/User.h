@@ -11,7 +11,7 @@ public:
 	std::string Username;
 	Role Role;
 
-	bool operator==(const User& user) const
+	bool operator==(const User& user) const 
 	{
 		if (Username.compare(user.Username) == 0)
 			return true;
