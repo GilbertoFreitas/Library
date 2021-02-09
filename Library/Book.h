@@ -6,7 +6,7 @@
 class Book
 {
 private:
-	int Id;
+	
 	std::string Title;
 	std::string Author;
 	bool CheckedOut;
@@ -15,10 +15,12 @@ public:
 	Book();
 	Book(std::string title, std::string author);
 
-	void SetBookId(int id);
+	int Id;
+
 	void CheckInOrOut(bool checkOut);
 	void DisplayBook();
 	bool IsCheckedOut();
+	std::string GetBookFileData();
 
 
 	bool operator==(const Book& book) const

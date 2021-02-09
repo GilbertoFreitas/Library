@@ -3,6 +3,7 @@
 #include "Inventory.h"
 #include <string>
 #include "User.h"
+#include <fstream>
 
 using namespace std;
 
@@ -10,8 +11,61 @@ Inventory _inventory;
 vector<User> _users;
 User _loggedInUser;
 
-void CreateAccount()
-{
+Role GetRoleByVal(int roleVal) {
+    Role outRole;
+
+    if (roleVal == 0) {
+        outRole = Role::Admin;
+    }
+    else if (roleVal == 1) {
+        outRole = Role::Employee;
+    }
+    else {
+        outRole = Role::Member;
+    }
+
+    return outRole;
+}
+
+void LoadUsers() {
+    ifstream inFile("users.txt");
+
+    string lineData[2];
+    //lineData[0] = username;
+    //lineData[1] = role int val;
+
+    string userLine;
+    while (getline(inFile, userLine)) {
+
+        size_t index = userLine.find("|");
+        lineData[0] = userLine.substr(0, index);
+        lineData[1] = userLine.substr(index + 1);
+
+        User loadedUser;
+        loadedUser.Username = lineData[0];
+        loadedUser.Role = GetRoleByVal(stoi(lineData[1]));
+
+        _users.push_back(loadedUser);
+
+    }
+}
+
+int GetRoleVal(Role role) {
+    int roleVal = -1;
+    if (role == Role::Admin) {
+        roleVal = 0;
+    }
+    else if (role == Role::Employee) {
+        roleVal = 1;
+    }
+    else if (role == Role::Member) {
+        roleVal = 2;
+    }
+
+    return roleVal;
+}
+
+void CreateAccount() {
 
     User newUser;
     /*cout << "First Name:";
@@ -38,26 +92,25 @@ void CreateAccount()
     cin >> roleOption;
     cin.ignore();
 
-    if (roleOption == 1)
-    {
+    if (roleOption == 1) {
         newUser.Role = Role::Admin;
     }
-    else if (roleOption == 2)
-    {
+    else if (roleOption == 2) {
         newUser.Role = Role::Employee;
     }
-    else
-    {
+    else {
         newUser.Role = Role::Member;
     }
 
-
     _users.push_back(newUser);
+
+    ofstream oFile("Users.txt", ios_base::app);
+    oFile << newUser.Username << "|" << GetRoleVal(newUser.Role) << endl;   
+    oFile.close();
 
 }
 
-void Login()
-{
+void Login() {
     cout << "Choose and option:" << endl;
     cout << "1 - Log In" << endl;
     cout << "2 - Create account" << endl;
@@ -71,23 +124,27 @@ void Login()
         CreateAccount();
     }
 
-    cout << "Enter username: ";
-    string username;
-    cin >> username;
-
-    User user;
-    user.Username = username;
-
-    vector<User>::iterator it = find(_users.begin(), _users.end(), user);
-
-    if (it != _users.end())
+    while (true)
     {
-        _loggedInUser = _users[it - _users.begin()];
+        cout << "Enter username: ";
+        string username;
+        cin >> username;
+
+        User user;
+        user.Username = username;
+
+        vector<User>::iterator it = find(_users.begin(), _users.end(), user);
+
+        if (it != _users.end()) {
+            _loggedInUser = _users[it - _users.begin()];
+            break;
+        }
     }
+    
+    
 }
 
-void DisplayMainMenu()
-{
+void DisplayMainMenu() {
     cout << endl;
     cout << "Choose and option:" << endl;
     if (_loggedInUser.Role == Role::Employee || _loggedInUser.Role == Role::Admin)
@@ -104,8 +161,7 @@ void DisplayMainMenu()
     cout << "0 - Exit" << endl;
 }
 
-void AddNewBook() 
-{
+void AddNewBook() {
     cout << "Title: ";
     string title;
     getline(cin, title);
@@ -121,13 +177,11 @@ void AddNewBook()
     _inventory.AddBook(newBook);
 }
 
-void ListBooks()
-{
+void ListBooks() {
     _inventory.DisplayAllBooks();
 }
 
-void CheckInOrOutBook(bool checkOut)
-{
+void CheckInOrOutBook(bool checkOut) {
     string inOrOuT;
 
     if (checkOut)
@@ -164,8 +218,7 @@ void CheckInOrOutBook(bool checkOut)
     }
 }
 
-void RemoveBook()
-{
+void RemoveBook() {
     cout << "Title: ";
     string title;
     getline(cin, title);
@@ -173,15 +226,17 @@ void RemoveBook()
     _inventory.RemoveBook(title);
 }
 
-void DisplayCheckedOutBooks()
-{
+void DisplayCheckedOutBooks() {
     _inventory.DisplayCheckOutBooks();
 }
 
 
-int main()
-{
+int main() {
+
+    LoadUsers();
     Login();
+
+    _inventory.LoadBooks();
         while (true)
         {
             DisplayMainMenu();
